@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>拨打电话</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        .container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            padding: 40px 25px;
+            text-align: center;
+            max-width: 350px;
+            width: 100%;
+        }
+        .icon {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 0 auto 20px;
+            box-shadow: 0 8px 25px rgba(40, 167, 69, 0.4);
+        }
+        .icon svg {
+            width: 40px;
+            height: 40px;
+            fill: white;
+        }
+        h1 {
+            color: #333;
+            font-size: 22px;
+            margin-bottom: 15px;
+        }
+        .phone {
+            font-size: 22px;
+            font-weight: bold;
+            color: #28a745;
+            margin-bottom: 25px;
+            word-break: break-all;
+            line-height: 1.5;
+            padding: 0 10px;
+        }
+        .btn {
+            display: inline-block;
+            padding: 15px 50px;
+            background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+            color: white;
+            text-decoration: none;
+            border-radius: 30px;
+            font-size: 18px;
+            font-weight: 600;
+            box-shadow: 0 5px 20px rgba(40, 167, 69, 0.4);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(40, 167, 69, 0.5);
+        }
+        .btn:active {
+            transform: translateY(0);
+        }
+        .tip {
+            margin-top: 20px;
+            color: #999;
+            font-size: 13px;
+        }
+        .error {
+            color: #e74c3c;
+            font-size: 16px;
+        }
+        @media (max-width: 320px) {
+            .container {
+                padding: 30px 20px;
+            }
+            .phone {
+                font-size: 18px;
+            }
+            .btn {
+                padding: 12px 40px;
+                font-size: 16px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="icon">
+            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path d="M20.01 15.38c-1.23 0-2.42-.2-3.53-.56a.977.977 0 00-1.01.24l-1.57 1.97c-2.83-1.35-5.48-3.9-6.89-6.83l1.95-1.66c.27-.28.35-.67.24-1.02-.37-1.11-.56-2.3-.56-3.53 0-.54-.45-.99-.99-.99H4.19C3.65 3 3 3.24 3 3.99 3 13.28 10.73 21 20.01 21c.71 0 .99-.63.99-1.18v-3.45c0-.54-.45-.99-.99-.99z"/>
+            </svg>
+        </div>
+        <h1>拨打电话</h1>
+        <div class="phone" id="phoneDisplay"></div>
+        <a href="#" class="btn" id="callBtn">立即拨打</a>
+        <p class="tip">点击按钮即可拨打电话</p>
+    </div>
+    <script>
+        function getQueryParam(name) {
+            var reg = new RegExp('(^|&)' + name + '=([^&]*)(&|$)');
+            var r = window.location.search.substr(1).match(reg);
+            if (r != null) return decodeURIComponent(r[2]);
+            return null;
+        }
+
+        function formatPhone(phone) {
+            if (!phone) return '';
+            phone = phone.replace(/^\+/, '');
+            if (phone.length === 11 && phone.startsWith('1')) {
+                return phone.slice(0, 3) + ' ' + phone.slice(3, 7) + ' ' + phone.slice(7);
+            } else if (phone.length === 13 && phone.startsWith('86')) {
+                return '+' + phone.slice(0, 2) + ' ' + phone.slice(2, 5) + ' ' + phone.slice(5, 9) + ' ' + phone.slice(9);
+            } else if (phone.length > 10) {
+                var formatted = '';
+                for (var i = 0; i < phone.length; i++) {
+                    if (i > 0 && i % 4 === 0) formatted += ' ';
+                    formatted += phone[i];
+                }
+                return formatted;
+            }
+            return phone;
+        }
+
+        var phone = getQueryParam('phone');
+
+        if (phone) {
+            var displayPhone = formatPhone(phone);
+            document.getElementById('phoneDisplay').textContent = displayPhone;
+            
+            var telUrl = 'tel:' + phone;
+            document.getElementById('callBtn').href = telUrl;
+            
+            setTimeout(function() {
+                window.location.href = telUrl;
+            }, 500);
+        } else {
+            document.getElementById('phoneDisplay').innerHTML = '<span class="error">未指定电话号码</span>';
+            document.getElementById('callBtn').style.display = 'none';
+        }
+    </script>
+</body>
+</html>
