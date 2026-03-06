@@ -948,13 +948,9 @@
 
             const fullPhone = countryCode + phone;
             
-            var qrUrl;
-            var protocol = window.location.protocol;
-            var hostname = window.location.hostname;
-            var port = window.location.port;
-            
-            var baseUrl = protocol + '//' + hostname + (port ? ':' + port : '') + '/';
-            qrUrl = baseUrl + 'call.html?phone=' + encodeURIComponent(fullPhone);
+            var currentPath = window.location.pathname;
+            var basePath = currentPath.substring(0, currentPath.lastIndexOf('/') + 1);
+            var qrUrl = window.location.origin + basePath + 'call.html?phone=' + encodeURIComponent(fullPhone);
 
             qrcodeDiv.innerHTML = '';
 
